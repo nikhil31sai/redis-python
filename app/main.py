@@ -13,7 +13,6 @@ def main():
     while True:
 
         req = conn.recv(1024).decode("utf-8")
-        print(req)
         if req == "*1\r\n$4\r\nPING\r\n":
             conn.send("+PONG\r\n".encode("utf-8"))
 
