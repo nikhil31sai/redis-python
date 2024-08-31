@@ -8,7 +8,12 @@ def main():
     # Uncomment this to pass the first stage
     #
     server_socket = socket.create_server(("localhost", 6379), reuse_port=True)
-    server_socket.accept() # wait for client
+    conn, address = server_socket.accept() # wait for client
+
+    req = conn.recv(1024).decode("utf-8")
+    if req == "*1\r\n$4\r\nPING\r\n":
+        conn.send("+PONG\r\n".encode("utf-8"))
+
 
 
 if __name__ == "__main__":
