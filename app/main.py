@@ -1,6 +1,6 @@
 import socket  # noqa: F401
 import threading
-
+import parser
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -20,9 +20,13 @@ def main():
 
 def handle_conn(conn, address):
     while True:
-        req = conn.recv(1024).decode("utf-8")
-        if req == "*1\r\n$4\r\nPING\r\n":
-            conn.send("+PONG\r\n".encode("utf-8"))
+        req = parser.parse(conn.recv(1024))
+        if req == "PING":
+            resp = parser.encode("PONG")
+        elif req[0] == "ECHO":
+            resp = req[1]
+        conn.send(resp)
+        
 
 
 if __name__ == "__main__":
