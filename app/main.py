@@ -8,6 +8,8 @@ def main():
 
     # Uncomment this to pass the first stage
     #
+
+    data = {}
     server_socket = socket.create_server(("localhost", 6379), reuse_port=True)
 
     while True:
@@ -19,6 +21,7 @@ def main():
         
 
 def handle_conn(conn, address):
+    global data
     while True:
         req = parser.parse(conn.recv(1024))
         
@@ -26,6 +29,14 @@ def handle_conn(conn, address):
             resp = parser.encode("PONG")
         elif req[0] == "ECHO":
             resp = parser.encode(req[1])
+        elif req[0] == "SET":
+            data[req[1]] = req[2]
+            resp = parser.encode("OK")
+        elif req[0] == "GET":
+            ans = None
+            if req[1] in data:
+                ans = bytes(data[req[1]])
+            resp = parser.encode(ans)
         conn.send(resp)
         
 
