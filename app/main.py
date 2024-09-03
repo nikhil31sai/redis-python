@@ -34,7 +34,7 @@ def handle_conn(conn, address, data):
         elif req[0] == "GET":
             ans = None
             if req[1] in data:
-                ans = bytes(data[req[1]])
+                ans = data[req[1]].encode('utf-8')
             resp = parser.encode(ans)
         conn.send(resp)
         
