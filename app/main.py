@@ -24,8 +24,7 @@ def handle_conn(conn, address):
         if req == "PING":
             resp = parser.encode("PONG")
         elif req[0] == "ECHO":
-            resp = req[1]
-            print (req)
+            resp = parser.encode(req[1])
         conn.send(resp)
         
 
