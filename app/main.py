@@ -16,12 +16,11 @@ def main():
 
         conn, address = server_socket.accept() # wait for client
 
-        thread = threading.Thread(target=handle_conn,   args=(conn, address))
+        thread = threading.Thread(target=handle_conn,   args=(conn, address, data))
         thread.start()
         
 
-def handle_conn(conn, address):
-    global data
+def handle_conn(conn, address, data):
     while True:
         req = parser.parse(conn.recv(1024))
         
