@@ -1,6 +1,6 @@
 import socket  # noqa: F401
 import threading
-import parser as parser
+import utils.parser as parser
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
