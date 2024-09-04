@@ -36,6 +36,7 @@ def handle_conn(conn, address, data):
             ans = None
             if req[1] in data:
                 print(data[req[1]])
+                print(datetime.datetime.now().timestamp()*1000)
                 if(data[req[1]][1] < datetime.datetime.now().timestamp()*1000):
                     ans = data[req[1]][0].encode('utf-8')
                 else:
