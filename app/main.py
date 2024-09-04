@@ -34,13 +34,11 @@ def handle_conn(conn, address, data):
             resp = parser.encode("OK")
         elif req[0] == "GET":
             ans = None
-            print(1)
             if req[1] in data:
+                (data[req[1]])
                 if(data[req[1]][1] < datetime.datetime.now().timestamp()*1000):
-                    print(2)
                     ans = data[req[1]][0].encode('utf-8')
                 else:
-                    print(3)
                     data.pop(req[1])
             resp = parser.encode(ans)
         conn.send(resp)
