@@ -1,6 +1,7 @@
 import socket  # noqa: F401
 import threading
 import utils.parser as parser
+import datetime
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -29,12 +30,15 @@ def handle_conn(conn, address, data):
         elif req[0] == "ECHO":
             resp = parser.encode(req[1])
         elif req[0] == "SET":
-            data[req[1]] = req[2]
+            data[req[1]] = (req[2], datetime.datetime.now()*1000 + datetime.timedelta(milliseconds=int(req[4])))
             resp = parser.encode("OK")
         elif req[0] == "GET":
             ans = None
             if req[1] in data:
-                ans = data[req[1]].encode('utf-8')
+                if(data[req[1]][1] < datetime.datetime.now()*1000):
+                    ans = data[req[1]][0].encode('utf-8')
+                else:
+                    data.pop(req[1])
             resp = parser.encode(ans)
         conn.send(resp)
         
