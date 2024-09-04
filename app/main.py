@@ -30,7 +30,7 @@ def handle_conn(conn, address, data):
         elif req[0] == "ECHO":
             resp = parser.encode(req[1])
         elif req[0] == "SET":
-            data[req[1]] = (req[2], datetime.datetime.now().timestamp()*1000 + datetime.timedelta(milliseconds=int(req[4])))
+            data[req[1]] = (req[2], datetime.datetime.now().timestamp()*1000 + int(req[4]))
             resp = parser.encode("OK")
         elif req[0] == "GET":
             ans = None
