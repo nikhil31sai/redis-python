@@ -18,6 +18,10 @@ def main():
     print(args)
 
     data = {}
+    if args.dir:
+        data["dir"] = args.dir
+    if args.dbfilename:
+        data["dbfilename"] = args.dbfilename
     server_socket = socket.create_server(("localhost", 6379), reuse_port=True)
 
     while True:
@@ -49,6 +53,11 @@ def handle_conn(conn, address, data):
                     ans = data[req[1]][0].encode('utf-8')
                 else:
                     data.pop(req[1])
+            resp = parser.encode(ans)
+        elif req[0] == "CONFIG":
+            ans = None
+            if req[1] == "GET":
+                ans = [req[2], data[req[2]]]
             resp = parser.encode(ans)
         conn.send(resp)
         
