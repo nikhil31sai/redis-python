@@ -11,6 +11,8 @@ def main():
     # Uncomment this to pass the first stage
     #
     argP = argparse.ArgumentParser()
+    argP.add_argument("--dir")
+    argP.add_argument("--dbfilename")
     args = argP.parse_args()
 
     print(args)
