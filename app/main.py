@@ -2,7 +2,7 @@ import socket  # noqa: F401
 import threading
 import utils.parser as parser
 import datetime
-import sys
+import argparse
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -10,7 +10,11 @@ def main():
 
     # Uncomment this to pass the first stage
     #
-    print(sys.argv[0])
+    argP = argparse.ArgumentParser()
+    args = argP.parse_args()
+
+    print(args)
+
     data = {}
     server_socket = socket.create_server(("localhost", 6379), reuse_port=True)
 
