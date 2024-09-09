@@ -15,8 +15,6 @@ def main():
     argP.add_argument("--dbfilename")
     args = argP.parse_args()
 
-    print(args)
-
     data = {}
     if args.dir:
         data["dir"] = args.dir
@@ -58,6 +56,11 @@ def handle_conn(conn, address, data):
             ans = None
             if req[1] == "GET":
                 ans = [req[2], data[req[2]]]
+            resp = parser.encode(ans)
+        elif req[0] == "KEYS":
+            ans = None
+            if req[1] == "*":
+                ans = parser.read_rdb_data(data['dir'], data['dbfilename'])
             resp = parser.encode(ans)
         conn.send(resp)
         

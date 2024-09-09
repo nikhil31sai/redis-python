@@ -1,5 +1,7 @@
 # parser.py
 
+import struct
+
 def parse(data):
     """ Parse RESP data and return the corresponding Python object """
     if not data:
@@ -298,3 +300,24 @@ class Push:
         if not isinstance(data, str):
             raise TypeError("Push data must be a str")
         self.data = data
+
+
+
+def read_rdb_data(dir, dbfilename):
+    rdb_file_loc = dir + "/" + dbfilename
+    with open(rdb_file_loc, "rb") as f:
+        while operand := f.read(1):
+            print(operand)
+            if operand == b"\xfb":
+                break
+        f.read(3)
+        length = struct.unpack("B", f.read(1))[0]
+        print("length")
+        print(length)
+        if length >> 6 == 0b00:
+            length = length & 0b00111111
+        else:
+            length = 0
+        val = f.read(length).decode()
+        print(val)
+        return val
