@@ -344,18 +344,32 @@ def read_rdb_val(dir, dbfilename, key):
         while operand := f.read(1):
             if operand == b"\xfb":
                 break
-        f.read(3)
-        length = struct.unpack("B", f.read(1))[0]
-        if length >> 6 == 0b00:
-            length = length & 0b00111111
-        else:
-            length = 0
-        f.read(length)
+        numKeys = struct.unpack("B", f.read(1))[0]
+        f.read(1)
 
-        length = struct.unpack("B", f.read(1))[0]
-        if length >> 6 == 0b00:
-            length = length & 0b00111111
-        else:
-            length = 0
-        val = f.read(length).decode()
-        return val
+        for i in range(numKeys):
+            
+            top = f.read(1)
+            if top == b"\xfc":
+                f.read(8+1)
+            elif top == b"\xfd":
+                f.read(4+1)
+
+            length = struct.unpack("B", f.read(1))[0]
+            if length >> 6 == 0b00:
+                length = length & 0b00111111
+            else:
+                length = 0
+            currKey = f.read(length).decode()
+
+            length = struct.unpack("B", f.read(1))[0]
+            if length >> 6 == 0b00:
+                length = length & 0b00111111
+            else:
+                length = 0
+
+            val = f.read(length).decode()
+            if currKey == key:
+                return val
+
+        return ""
