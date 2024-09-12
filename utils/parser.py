@@ -315,8 +315,16 @@ def read_rdb_key(dir, dbfilename):
         ans = []
 
         for i in range(0,  numKeys):
+            
+            top = f.read(1)
+            if top == b"\xfc":
+                f.read(8)
+                top = f.read(1)
+            elif top == b"\xfd":
+                f.read(4)
+                top = f.read(1)
 
-            length = struct.unpack("B", f.read(1))[0]
+            length = struct.unpack("B", top)[0]
             if length >> 6 == 0b00:
                 length = length & 0b00111111
             else:
