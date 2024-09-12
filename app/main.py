@@ -61,7 +61,7 @@ def handle_conn(conn, address, data):
             ans = None
             if req[1] == "*":
                 ans = parser.read_rdb_data(data['dir'], data['dbfilename'])
-            resp = parser.encode(ans)
+            resp = parser.encode([ans])
         conn.send(resp)
         
 
