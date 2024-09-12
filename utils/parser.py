@@ -314,7 +314,7 @@ def read_rdb_key(dir, dbfilename):
 
         ans = []
 
-        for i in range(0,  numKeys):
+        for i in range(numKeys):
             
             top = f.read(1)
             if top == b"\xfc":
