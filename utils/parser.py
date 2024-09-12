@@ -318,10 +318,10 @@ def read_rdb_key(dir, dbfilename):
             
             top = f.read(1)
             if top == b"\xfc":
-                f.read(8)
+                f.read(8+1)
                 top = f.read(1)
             elif top == b"\xfd":
-                f.read(4)
+                f.read(4+1)
                 top = f.read(1)
 
             length = struct.unpack("B", top)[0]
