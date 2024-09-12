@@ -310,7 +310,7 @@ def read_rdb_key(dir, dbfilename):
             if operand == b"\xfb":
                 break
         numKeys = struct.unpack("B", f.read(1))[0]
-        f.read(3)
+        f.read(2)
 
         ans = []
 
