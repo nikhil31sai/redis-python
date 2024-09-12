@@ -310,7 +310,7 @@ def read_rdb_key(dir, dbfilename):
             if operand == b"\xfb":
                 break
         numKeys = struct.unpack("B", f.read(1))[0]
-        f.read(2)
+        f.read(1)
 
         ans = []
 
@@ -319,12 +319,10 @@ def read_rdb_key(dir, dbfilename):
             top = f.read(1)
             if top == b"\xfc":
                 f.read(8+1)
-                top = f.read(1)
             elif top == b"\xfd":
                 f.read(4+1)
-                top = f.read(1)
 
-            length = struct.unpack("B", top)[0]
+            length = struct.unpack("B", f.read(1))[0]
             if length >> 6 == 0b00:
                 length = length & 0b00111111
             else:
