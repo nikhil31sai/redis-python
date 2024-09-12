@@ -303,21 +303,39 @@ class Push:
 
 
 
-def read_rdb_data(dir, dbfilename):
+def read_rdb_key(dir, dbfilename):
     rdb_file_loc = dir + "/" + dbfilename
     with open(rdb_file_loc, "rb") as f:
         while operand := f.read(1):
-            print(operand)
             if operand == b"\xfb":
                 break
         f.read(3)
         length = struct.unpack("B", f.read(1))[0]
-        print("length")
-        print(length)
         if length >> 6 == 0b00:
             length = length & 0b00111111
         else:
             length = 0
         val = f.read(length).decode()
-        print(val)
+        return val
+    
+def read_rdb_val(dir, dbfilename, key):
+    rdb_file_loc = dir + "/" + dbfilename
+    with open(rdb_file_loc, "rb") as f:
+        while operand := f.read(1):
+            if operand == b"\xfb":
+                break
+        f.read(3)
+        length = struct.unpack("B", f.read(1))[0]
+        if length >> 6 == 0b00:
+            length = length & 0b00111111
+        else:
+            length = 0
+        f.read(length)
+
+        length = struct.unpack("B", f.read(1))[0]
+        if length >> 6 == 0b00:
+            length = length & 0b00111111
+        else:
+            length = 0
+        val = f.read(length).decode()
         return val
