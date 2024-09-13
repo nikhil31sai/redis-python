@@ -383,4 +383,4 @@ def read_rdb_val(dir, dbfilename, key):
                 else:
                     return None
 
-        return ""
+        return None
