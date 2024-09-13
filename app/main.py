@@ -67,8 +67,8 @@ def handle_conn(conn, address, data):
                     ans = parser.read_rdb_key(data['dir'], data['dbfilename'])
                 resp = parser.encode(ans)
             conn.send(resp)
-    except:
-        print("Exception")
+    except Exception as e:
+        print(e)
         
 
 
