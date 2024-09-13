@@ -27,9 +27,12 @@ def main():
 
     if args.port:
         port = int(args.port)
-    data["role"] = "master"
     if args.replicaof:
         data["role"] = "slave"
+    else:
+        data["role"] = "master"
+        data["master_replid"] = "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb"
+        data["master_repl_offset"] = 0
     server_socket = socket.create_server(("localhost", port), reuse_port=True)
 
     while True:
@@ -74,9 +77,13 @@ def handle_conn(conn, address, data):
                     ans = parser.read_rdb_key(data['dir'], data['dbfilename'])
                 resp = parser.encode(ans)
             elif req[0] == "INFO":
-                ans = "role:master"
+                ans = ""
                 if data['role'] == "slave":
                     ans = "role:slave"
+                else:
+                    ans = "role:master"
+                    ans = ans + "\n" + data["master_replid"]
+                    ans = ans + "\n" + data["master_repl_offset"]
                 resp = parser.encode(ans)
             conn.send(resp)
             print("Sending response")
