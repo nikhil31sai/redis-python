@@ -53,8 +53,9 @@ def handle_conn(conn, address, data):
                         ans = data[req[1]][0].encode('utf-8')
                     else:
                         data.pop(req[1])
-                print("encoding: " + str(ans))
+                
                 resp = parser.encode(ans)
+                print("encoding: " + str(ans))
             elif req[0] == "CONFIG":
                 ans = None
                 if req[1] == "GET":
@@ -65,6 +66,7 @@ def handle_conn(conn, address, data):
                 if req[1] == "*":
                     ans = parser.read_rdb_key(data['dir'], data['dbfilename'])
                 resp = parser.encode(ans)
+            print("Sending response")
             conn.send(resp)
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
