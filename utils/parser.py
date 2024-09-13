@@ -402,7 +402,10 @@ def read_key_val_from_db(dir, dbfilename, data):
             top = f.read(1)
             if top == b"\xfc":
                 milliTime = int.from_bytes(f.read(8), byteorder="little")
-                if milliTime < datetime.datetime.now().timestamp()*1000 :
+                now = datetime.datetime.now().timestamp()*1000 
+                if milliTime < now:
+                    print("milliTime: ", milliTime)
+                    print("now: ", now)
                     expired = True
                 f.read(1)
             elif top == b"\xfd":
