@@ -73,7 +73,7 @@ def handle_conn(conn, address, data):
                     ans = parser.read_rdb_key(data['dir'], data['dbfilename'])
                 resp = parser.encode(ans)
             elif req[0] == "INFO":
-                ans = bytes("role:master")
+                ans = "role:master".bytes()
                 resp = parser.encode(ans)
             conn.send(resp)
             print("Sending response")
