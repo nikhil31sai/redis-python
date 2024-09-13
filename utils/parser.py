@@ -397,7 +397,7 @@ def read_key_val_from_db(dir, dbfilename, data):
         f.read(1)
         print("NumKeys: ", numKeys)
         expired = False
-        for i in range(numKeys-1):
+        for i in range(numKeys):
             print(i)
             top = f.read(1)
             if top == b"\xfc":

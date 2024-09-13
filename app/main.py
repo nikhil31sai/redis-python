@@ -53,6 +53,7 @@ def handle_conn(conn, address, data):
                         ans = data[req[1]][0].encode('utf-8')
                     else:
                         data.pop(req[1])
+                print("encoding: " + str(ans))
                 resp = parser.encode(ans)
             elif req[0] == "CONFIG":
                 ans = None
