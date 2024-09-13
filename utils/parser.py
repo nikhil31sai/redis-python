@@ -396,8 +396,8 @@ def read_key_val_from_db(dir, dbfilename, data):
         numKeys = struct.unpack("B", f.read(1))[0]
         f.read(1)
         print("NumKeys: ", numKeys)
-        expired = False
         for i in range(numKeys):
+            expired = False
             print(i)
             top = f.read(1)
             if top == b"\xfc":
@@ -431,6 +431,5 @@ def read_key_val_from_db(dir, dbfilename, data):
             print("Value:", val)
             if not expired:
                 data[currKey] = (val, -1)
-                expired = False
 
         return
