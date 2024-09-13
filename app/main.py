@@ -66,8 +66,8 @@ def handle_conn(conn, address, data):
                 if req[1] == "*":
                     ans = parser.read_rdb_key(data['dir'], data['dbfilename'])
                 resp = parser.encode(ans)
-            print("Sending response")
             conn.send(resp)
+            print("Sending response")
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
