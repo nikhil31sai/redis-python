@@ -428,9 +428,8 @@ def read_key_val_from_db(dir, dbfilename, data):
                 length = 0
             print("Key:", currKey)
             val = f.read(length).decode()
-            
+            print("Value:", val)
             if not expired:
-                print("Value:", val)
                 data[currKey] = (val, -1)
                 expired = False
 
