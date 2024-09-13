@@ -385,3 +385,48 @@ def read_rdb_val(dir, dbfilename, key):
                     return None
 
         return ""
+    
+
+def read_key_val_from_db(dir, dbfilename, data):
+    rdb_file_loc = dir + "/" + dbfilename
+    with open(rdb_file_loc, "rb") as f:
+        while operand := f.read(1):
+            if operand == b"\xfb":
+                break
+        numKeys = struct.unpack("B", f.read(1))[0]
+        f.read(1)
+        print("NumKeys: ", numKeys)
+        expired = False
+        for i in range(numKeys):
+            print(i)
+            top = f.read(1)
+            if top == b"\xfc":
+                milliTime = int.from_bytes(f.read(8), byteorder="little")
+                if milliTime < datetime.datetime.now().timestamp()*1000 :
+                    expired = True
+                f.read(1)
+            elif top == b"\xfd":
+                secTime = int.from_bytes(f.read(4), byteorder="little")
+                if secTime < datetime.datetime.now().timestamp():
+                    expired = True
+                f.read(1)
+
+            length = struct.unpack("B", f.read(1))[0]
+            if length >> 6 == 0b00:
+                length = length & 0b00111111
+            else:
+                length = 0
+            currKey = f.read(length).decode()
+
+            length = struct.unpack("B", f.read(1))[0]
+            if length >> 6 == 0b00:
+                length = length & 0b00111111
+            else:
+                length = 0
+            print("Key:", currKey)
+            val = f.read(length).decode()
+            print("Value:", val)
+            if not expired:
+                data[currKey] = (val, -1)
+
+        return

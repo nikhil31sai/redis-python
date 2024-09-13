@@ -18,8 +18,8 @@ def main():
     data = {}
     if args.dir:
         data["dir"] = args.dir
-    if args.dbfilename:
         data["dbfilename"] = args.dbfilename
+        parser.read_key_val_from_db(data["dir"], data["dbfilename"], data)
     server_socket = socket.create_server(("localhost", 6379), reuse_port=True)
 
     while True:
