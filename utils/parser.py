@@ -1,6 +1,7 @@
 # parser.py
 
 import datetime
+import os
 import struct
 
 def parse(data):
@@ -389,6 +390,8 @@ def read_rdb_val(dir, dbfilename, key):
 
 def read_key_val_from_db(dir, dbfilename, data):
     rdb_file_loc = dir + "/" + dbfilename
+    if not os.path.isfile(rdb_file_loc):
+        return
     with open(rdb_file_loc, "rb") as f:
         while operand := f.read(1):
             if operand == b"\xfb":
