@@ -82,8 +82,8 @@ def handle_conn(conn, address, data):
                     ans = "role:slave"
                 else:
                     ans = "role:master"
-                    ans = ans + "\n" + data["master_replid"]
-                    ans = ans + "\n" + data["master_repl_offset"]
+                    ans = ans + " \n " + "master_replid:" + data["master_replid"]
+                    ans = ans + " \n " + "master_repl_offset:" + data["master_repl_offset"]
                 resp = parser.encode(ans)
             conn.send(resp)
             print("Sending response")
