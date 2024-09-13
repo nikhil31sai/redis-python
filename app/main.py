@@ -40,7 +40,7 @@ def main():
     server_socket = socket.create_server(("localhost", port), reuse_port=True)
     if data["role"] == "slave":
         sock = socket.create_connection((data["master_host"], int(data["master_port"])))
-        sock.send(parser.encode("PING"))
+        sock.send(parser.encode(["PING"]))
     while True:
         conn, address = server_socket.accept() # wait for client
         thread = threading.Thread(target=handle_conn,   args=(conn, address, data))
