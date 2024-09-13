@@ -27,7 +27,7 @@ def main():
 
     if args.port:
         port = int(args.port)
-    
+    data["role"] = "master"
     if args.replicaof:
         data["role"] = "slave"
     server_socket = socket.create_server(("localhost", port), reuse_port=True)
