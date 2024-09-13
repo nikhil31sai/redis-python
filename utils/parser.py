@@ -347,10 +347,10 @@ def read_rdb_val(dir, dbfilename, key):
                 break
         numKeys = struct.unpack("B", f.read(1))[0]
         f.read(1)
-
+        print("NumKeys: ", numKeys)
         expired = False
         for i in range(numKeys):
-            
+            print(i)
             top = f.read(1)
             if top == b"\xfc":
                 milliTime = int.from_bytes(f.read(8), byteorder="little")
@@ -378,12 +378,9 @@ def read_rdb_val(dir, dbfilename, key):
 
             val = f.read(length).decode()
             if currKey == key:
-                print("1")
                 if not expired:
-                    print("2")
                     return val
                 else:
-                    print(3)
                     return None
 
         return ""
