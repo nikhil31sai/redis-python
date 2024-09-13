@@ -359,7 +359,7 @@ def read_rdb_val(dir, dbfilename, key):
                 f.read(1)
             elif top == b"\xfd":
                 secTime = struct.unpack("<Q", f.read(4))[0]
-                if secTime < datetime.datetime.now().timestamp()*1000:
+                if secTime < datetime.datetime.now().timestamp():
                     expired = True
                 f.read(1)
 
