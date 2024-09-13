@@ -13,6 +13,7 @@ def main():
     argP = argparse.ArgumentParser()
     argP.add_argument("--dir")
     argP.add_argument("--dbfilename")
+    argP.add_argument("--port")
     args = argP.parse_args()
 
     data = {}
@@ -20,7 +21,12 @@ def main():
         data["dir"] = args.dir
         data["dbfilename"] = args.dbfilename
         parser.read_key_val_from_db(data["dir"], data["dbfilename"], data)
-    server_socket = socket.create_server(("localhost", 6379), reuse_port=True)
+    
+    port = 6379
+
+    if args.port:
+        port = args.port
+    server_socket = socket.create_server(("localhost", port), reuse_port=True)
 
     while True:
 
