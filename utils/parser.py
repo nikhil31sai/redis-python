@@ -1,5 +1,6 @@
 # parser.py
 
+import datetime
 import struct
 
 def parse(data):
@@ -347,13 +348,20 @@ def read_rdb_val(dir, dbfilename, key):
         numKeys = struct.unpack("B", f.read(1))[0]
         f.read(1)
 
+        expired = False
         for i in range(numKeys):
             
             top = f.read(1)
             if top == b"\xfc":
-                f.read(8+1)
+                milliTime = struct.unpack("B", f.read(8))[0]
+                if milliTime < datetime.datetime.now().timestamp()*1000 :
+                    expired = True
+                f.read(1)
             elif top == b"\xfd":
-                f.read(4+1)
+                secTime = struct.unpack("B", f.read(4))[0]
+                if secTime < datetime.datetime.now().timestamp()*1000:
+                    expired = True
+                f.read(1)
 
             length = struct.unpack("B", f.read(1))[0]
             if length >> 6 == 0b00:
@@ -370,6 +378,9 @@ def read_rdb_val(dir, dbfilename, key):
 
             val = f.read(length).decode()
             if currKey == key:
-                return val
+                if not expired:
+                    return val
+                else:
+                    return ""
 
         return ""
