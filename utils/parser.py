@@ -381,6 +381,6 @@ def read_rdb_val(dir, dbfilename, key):
                 if not expired:
                     return val
                 else:
-                    return ""
+                    return None
 
         return ""
