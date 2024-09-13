@@ -29,12 +29,18 @@ def main():
         port = int(args.port)
     if args.replicaof:
         data["role"] = "slave"
+        masterConf = args.replicaof.split()
+        data["master_host"] = masterConf[0]
+        data["master_port"] = masterConf[1]
     else:
         data["role"] = "master"
         data["master_replid"] = "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb"
         data["master_repl_offset"] = "0"
-    server_socket = socket.create_server(("localhost", port), reuse_port=True)
 
+    server_socket = socket.create_server(("localhost", port), reuse_port=True)
+    if data["role"] == "slave":
+        sock = socket.create_connection((data["master_host"], int(data["master_port"])))
+        sock.send(parser.encode("PING"))
     while True:
         conn, address = server_socket.accept() # wait for client
         thread = threading.Thread(target=handle_conn,   args=(conn, address, data))
