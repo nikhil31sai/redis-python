@@ -53,8 +53,6 @@ def handle_conn(conn, address, data):
                         ans = data[req[1]][0].encode('utf-8')
                     else:
                         data.pop(req[1])
-                else:
-                    ans = parser.read_rdb_val(data['dir'], data['dbfilename'], req[1])
                 resp = parser.encode(ans)
             elif req[0] == "CONFIG":
                 ans = None
