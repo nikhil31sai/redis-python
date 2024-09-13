@@ -375,7 +375,7 @@ def read_rdb_val(dir, dbfilename, key):
                 length = length & 0b00111111
             else:
                 length = 0
-
+            print("Key:", currKey)
             val = f.read(length).decode()
             if currKey == key:
                 if not expired:
