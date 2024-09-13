@@ -32,7 +32,7 @@ def main():
     else:
         data["role"] = "master"
         data["master_replid"] = "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb"
-        data["master_repl_offset"] = 0
+        data["master_repl_offset"] = "0"
     server_socket = socket.create_server(("localhost", port), reuse_port=True)
 
     while True:
