@@ -31,40 +31,44 @@ def main():
         
 
 def handle_conn(conn, address, data):
-    while True:
-        req = parser.parse(conn.recv(1024))
-        
-        if req[0] == "PING":
-            resp = parser.encode("PONG")
-        elif req[0] == "ECHO":
-            resp = parser.encode(req[1])
-        elif req[0] == "SET":
-            if len(req) > 3 and req[3] == "px":
-                data[req[1]] = (req[2], datetime.datetime.now().timestamp()*1000 + int(req[4]))
-            else:
-                data[req[1]] = (req[2], -1)
-            resp = parser.encode("OK")
-        elif req[0] == "GET":
-            ans = None
-            if req[1] in data:
-                if(data[req[1]][1] == -1 or data[req[1]][1] > datetime.datetime.now().timestamp()*1000):
-                    ans = data[req[1]][0].encode('utf-8')
+    try:    
+
+        while True:
+            req = parser.parse(conn.recv(1024))
+            
+            if req[0] == "PING":
+                resp = parser.encode("PONG")
+            elif req[0] == "ECHO":
+                resp = parser.encode(req[1])
+            elif req[0] == "SET":
+                if len(req) > 3 and req[3] == "px":
+                    data[req[1]] = (req[2], datetime.datetime.now().timestamp()*1000 + int(req[4]))
                 else:
-                    data.pop(req[1])
-            else:
-                ans = parser.read_rdb_val(data['dir'], data['dbfilename'], req[1])
-            resp = parser.encode(ans)
-        elif req[0] == "CONFIG":
-            ans = None
-            if req[1] == "GET":
-                ans = [req[2], data[req[2]]]
-            resp = parser.encode(ans)
-        elif req[0] == "KEYS":
-            ans = None
-            if req[1] == "*":
-                ans = parser.read_rdb_key(data['dir'], data['dbfilename'])
-            resp = parser.encode(ans)
-        conn.send(resp)
+                    data[req[1]] = (req[2], -1)
+                resp = parser.encode("OK")
+            elif req[0] == "GET":
+                ans = None
+                if req[1] in data:
+                    if(data[req[1]][1] == -1 or data[req[1]][1] > datetime.datetime.now().timestamp()*1000):
+                        ans = data[req[1]][0].encode('utf-8')
+                    else:
+                        data.pop(req[1])
+                else:
+                    ans = parser.read_rdb_val(data['dir'], data['dbfilename'], req[1])
+                resp = parser.encode(ans)
+            elif req[0] == "CONFIG":
+                ans = None
+                if req[1] == "GET":
+                    ans = [req[2], data[req[2]]]
+                resp = parser.encode(ans)
+            elif req[0] == "KEYS":
+                ans = None
+                if req[1] == "*":
+                    ans = parser.read_rdb_key(data['dir'], data['dbfilename'])
+                resp = parser.encode(ans)
+            conn.send(resp)
+    except:
+        print("Exception")
         
 
 
