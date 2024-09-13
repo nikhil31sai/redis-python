@@ -432,5 +432,6 @@ def read_key_val_from_db(dir, dbfilename, data):
             if not expired:
                 print("Value:", val)
                 data[currKey] = (val, -1)
+                expired = False
 
         return
