@@ -25,7 +25,7 @@ def main():
     port = 6379
 
     if args.port:
-        port = args.port
+        port = int(args.port)
     server_socket = socket.create_server(("localhost", port), reuse_port=True)
 
     while True:
