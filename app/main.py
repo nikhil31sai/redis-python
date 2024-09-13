@@ -14,6 +14,7 @@ def main():
     argP.add_argument("--dir")
     argP.add_argument("--dbfilename")
     argP.add_argument("--port")
+    argP.add_argument("--replicaof")
     args = argP.parse_args()
 
     data = {}
@@ -26,19 +27,19 @@ def main():
 
     if args.port:
         port = int(args.port)
+    
+    if args.replicaof:
+        data["role"] = "slave"
     server_socket = socket.create_server(("localhost", port), reuse_port=True)
 
     while True:
-
         conn, address = server_socket.accept() # wait for client
-
         thread = threading.Thread(target=handle_conn,   args=(conn, address, data))
         thread.start()
         
 
 def handle_conn(conn, address, data):
     try:    
-
         while True:
             req = parser.parse(conn.recv(1024))
             
@@ -74,6 +75,8 @@ def handle_conn(conn, address, data):
                 resp = parser.encode(ans)
             elif req[0] == "INFO":
                 ans = "role:master"
+                if data['role'] == "slave":
+                    ans = "role:slave"
                 resp = parser.encode(ans)
             conn.send(resp)
             print("Sending response")
