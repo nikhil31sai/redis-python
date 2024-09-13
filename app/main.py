@@ -68,7 +68,7 @@ def handle_conn(conn, address, data):
                 resp = parser.encode(ans)
             conn.send(resp)
     except Exception as e:
-        print(e)
+        print(type(e))
         
 
 
