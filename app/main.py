@@ -41,8 +41,12 @@ def main():
     if data["role"] == "slave":
         sock = socket.create_connection((data["master_host"], int(data["master_port"])))
         sock.send(parser.encode(["PING"]))
-        sock.send(parser.encode(["REPLCONF", "listening-port", str(port)]))
-        sock.send(parser.encode(["REPLCONF", "capa", "psync2"]))
+        while True:
+            req = parser.parse(sock.recv(1024))
+            if req[0] == "PONG":
+
+                sock.send(parser.encode(["REPLCONF", "listening-port", str(port)]))
+                sock.send(parser.encode(["REPLCONF", "capa", "psync2"]))
     while True:
         conn, address = server_socket.accept() # wait for client
         thread = threading.Thread(target=handle_conn,   args=(conn, address, data))
