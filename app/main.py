@@ -44,7 +44,7 @@ def main():
         while True:
             req = parser.parse(sock.recv(1024))
             print(req)
-            if req[0] == "PONG":
+            if req == "PONG":
                 sock.send(parser.encode(["REPLCONF", "listening-port", str(port)]))
                 sock.send(parser.encode(["REPLCONF", "capa", "psync2"]))
                 break
