@@ -43,6 +43,7 @@ def main():
         sock.send(parser.encode(["PING"]))
         while True:
             req = parser.parse(sock.recv(1024))
+            print(req)
             if req[0] == "PONG":
                 sock.send(parser.encode(["REPLCONF", "listening-port", str(port)]))
                 sock.send(parser.encode(["REPLCONF", "capa", "psync2"]))
@@ -98,7 +99,6 @@ def handle_conn(conn, address, data):
                     ans = ans + " \n " + "master_repl_offset:" + data["master_repl_offset"]
                 resp = parser.encode(ans)
             conn.send(resp)
-            print("Sending response")
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
