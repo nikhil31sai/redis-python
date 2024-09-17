@@ -47,7 +47,7 @@ def main():
             if req == "PONG":
                 sock.send(parser.encode(["REPLCONF", "listening-port", str(port)]))
                 sock.send(parser.encode(["REPLCONF", "capa", "psync2"]))
-                sock.send(parser.encode(["PSYNC", "?", "-1"]))
+                
                 break
     while True:
         conn, address = server_socket.accept() # wait for client
