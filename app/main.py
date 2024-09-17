@@ -49,6 +49,7 @@ def main():
                 sock.send(parser.encode(["REPLCONF", "capa", "psync2"]))
                 sock.recv(1024)
                 sock.send(parser.encode(["PSYNC", "?", "-1"]))
+                break
 
     while True:
         conn, address = server_socket.accept() # wait for client
