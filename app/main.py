@@ -104,7 +104,7 @@ def handle_conn(conn, address, data):
             elif req[0] == "REPLCONF":
                 resp = parser.encode("OK")
             elif req[0] == "PSYNC":
-                ans = ["FULLRESYNC", data["master_replid"], data["master_repl_offset"]]
+                ans = "FULLRESYNC" + " " + data["master_replid"] + " " + data["master_repl_offset"]
                 resp = parser.encode(ans)
             conn.send(resp)
     except Exception as ex:
