@@ -101,6 +101,8 @@ def handle_conn(conn, address, data):
                     ans = ans + " \n " + "master_replid:" + data["master_replid"]
                     ans = ans + " \n " + "master_repl_offset:" + data["master_repl_offset"]
                 resp = parser.encode(ans)
+            elif req[0] == "REPLCONF":
+                resp = parser.encode("OK")
             conn.send(resp)
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
