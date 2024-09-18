@@ -49,7 +49,7 @@ def main():
                 conn.send(parser.encode(["REPLCONF", "capa", "psync2"]))
                 conn.recv(1024)
                 conn.send(parser.encode(["PSYNC", "?", "-1"]))
-                print(parser.parse(conn.recv(1024)))
+                conn.recv(1024)
                 break
         
 
