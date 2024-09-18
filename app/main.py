@@ -50,6 +50,7 @@ def main():
                 conn.recv(1024)
                 conn.send(parser.encode(["PSYNC", "?", "-1"]))
                 conn.recv(1024)
+                conn.recv(1024)
                 break
         
 
