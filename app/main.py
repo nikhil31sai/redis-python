@@ -71,6 +71,7 @@ def handle_conn(conn, address, data):
                 resp = parser.encode(req[1])
                 conn.send(resp)
             elif req[0] == "SET":
+                print(req)
                 if len(req) > 3 and req[3] == "px":
                     data[req[1]] = (req[2], datetime.datetime.now().timestamp()*1000 + int(req[4]))
                 else:
@@ -78,9 +79,7 @@ def handle_conn(conn, address, data):
                 resp = parser.encode("OK")
 
                 if 'slaves' in data:
-                    print(data['slaves'])
                     for slave in data['slaves']:
-                        
                         slave.send(parser.encode(req))
 
                 if data['role'] != 'slave':
