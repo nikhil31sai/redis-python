@@ -64,8 +64,10 @@ def handle_conn(conn, address, data):
             
             if req[0] == "PING":
                 resp = parser.encode("PONG")
+                conn.send(resp)
             elif req[0] == "ECHO":
                 resp = parser.encode(req[1])
+                conn.send(resp)
             elif req[0] == "SET":
                 if len(req) > 3 and req[3] == "px":
                     data[req[1]] = (req[2], datetime.datetime.now().timestamp()*1000 + int(req[4]))
@@ -76,6 +78,9 @@ def handle_conn(conn, address, data):
                 if 'slaves' in data:
                     for slave in data['slaves']:
                         slave.send(parser.encode(req))
+                if data['role'] != 'slave':
+
+                    conn.send(resp)
             elif req[0] == "GET":
                 ans = None
                 if req[1] in data:
@@ -86,16 +91,19 @@ def handle_conn(conn, address, data):
                 
                 resp = parser.encode(ans)
                 print("encoding: " + str(ans))
+                conn.send(resp)
             elif req[0] == "CONFIG":
                 ans = None
                 if req[1] == "GET":
                     ans = [req[2], data[req[2]]]
                 resp = parser.encode(ans)
+                conn.send(resp)
             elif req[0] == "KEYS":
                 ans = None
                 if req[1] == "*":
                     ans = parser.read_rdb_key(data['dir'], data['dbfilename'])
                 resp = parser.encode(ans)
+                conn.send(resp)
             elif req[0] == "INFO":
                 ans = ""
                 if data['role'] == "slave":
@@ -105,8 +113,10 @@ def handle_conn(conn, address, data):
                     ans = ans + " \n " + "master_replid:" + data["master_replid"]
                     ans = ans + " \n " + "master_repl_offset:" + data["master_repl_offset"]
                 resp = parser.encode(ans)
+                conn.send(resp)
             elif req[0] == "REPLCONF":
                 resp = parser.encode("OK")
+                conn.send(resp)
             elif req[0] == "PSYNC":
                 ans = "FULLRESYNC" + " " + data["master_replid"] + " " + data["master_repl_offset"]
                 resp = parser.encode(ans)
@@ -121,7 +131,8 @@ def handle_conn(conn, address, data):
                 if 'slaves' not in data:
                     data['slaves'] = []
                 data['slaves'].append(conn)
-            conn.send(resp)
+                conn.send(resp)
+            
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
