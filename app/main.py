@@ -50,6 +50,7 @@ def main():
                 sock.recv(1024)
                 sock.send(parser.encode(["PSYNC", "?", "-1"]))
                 sock.recv(1024)
+                sock.recv(1024)
                 break
 
     while True:
@@ -78,6 +79,7 @@ def handle_conn(conn, address, data):
 
                 if 'slaves' in data:
                     for slave in data['slaves']:
+                        print('sending')
                         slave.send(parser.encode(req))
 
                 if data['role'] != 'slave':
