@@ -78,8 +78,9 @@ def handle_conn(conn, address, data):
                 resp = parser.encode("OK")
 
                 if 'slaves' in data:
+                    print(data['slaves'])
                     for slave in data['slaves']:
-                        print('sending')
+                        
                         slave.send(parser.encode(req))
 
                 if data['role'] != 'slave':
