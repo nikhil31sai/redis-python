@@ -72,6 +72,10 @@ def handle_conn(conn, address, data):
                 else:
                     data[req[1]] = (req[2], -1)
                 resp = parser.encode("OK")
+
+                if 'slaves' in data:
+                    for slave in data['slaves']:
+                        slave.send(parser.encode(req))
             elif req[0] == "GET":
                 ans = None
                 if req[1] in data:
@@ -112,6 +116,11 @@ def handle_conn(conn, address, data):
                 rdb_bytes = bytes.fromhex(rdb_hex)
                 ans = f"${len(rdb_bytes)}\r\n".encode()
                 resp = ans + rdb_bytes
+
+                # store slave connection for replication
+                if 'slaves' not in data:
+                    data['slaves'] = []
+                data['slaves'].append(conn)
             conn.send(resp)
     except Exception as ex:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
