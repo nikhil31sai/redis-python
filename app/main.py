@@ -50,7 +50,6 @@ def main():
                 sock.recv(1024)
                 sock.send(parser.encode(["PSYNC", "?", "-1"]))
                 sock.recv(1024)
-                sock.recv(1024)
                 break
 
     while True:
