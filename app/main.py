@@ -37,28 +37,33 @@ def main():
         data["master_replid"] = "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb"
         data["master_repl_offset"] = "0"
 
-    server_socket = socket.create_server(("localhost", port), reuse_port=True)
+    
     if data["role"] == "slave":
-        sock = socket.create_connection((data["master_host"], int(data["master_port"])))
-        sock.send(parser.encode(["PING"]))
+        conn = socket.create_connection((data["master_host"], int(data["master_port"])))
+        conn.send(parser.encode(["PING"]))
         while True:
-            req = parser.parse(sock.recv(1024))
+            req = parser.parse(conn.recv(1024))
             print(req)
             if req == "PONG":
-                sock.send(parser.encode(["REPLCONF", "listening-port", str(port)]))
-                sock.send(parser.encode(["REPLCONF", "capa", "psync2"]))
-                sock.recv(1024)
-                sock.send(parser.encode(["PSYNC", "?", "-1"]))
-                sock.recv(1024)
+                conn.send(parser.encode(["REPLCONF", "listening-port", str(port)]))
+                conn.send(parser.encode(["REPLCONF", "capa", "psync2"]))
+                conn.recv(1024)
+                conn.send(parser.encode(["PSYNC", "?", "-1"]))
+                print(parser.parse(conn.recv(1024)))
                 break
+        
+
+    else:
+        server_socket = socket.create_server(("localhost", port), reuse_port=True)
+        conn, address = server_socket.accept() # wait for client
 
     while True:
-        conn, address = server_socket.accept() # wait for client
-        thread = threading.Thread(target=handle_conn,   args=(conn, address, data))
+        
+        thread = threading.Thread(target=handle_conn,   args=(conn, data))
         thread.start()
         
 
-def handle_conn(conn, address, data):
+def handle_conn(conn, data):
     try:    
         while True:
             req = parser.parse(conn.recv(1024))
