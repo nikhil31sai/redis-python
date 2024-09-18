@@ -49,6 +49,7 @@ def main():
                 sock.send(parser.encode(["REPLCONF", "capa", "psync2"]))
                 sock.recv(1024)
                 sock.send(parser.encode(["PSYNC", "?", "-1"]))
+                sock.recv(1024)
                 break
 
     while True:
@@ -78,8 +79,8 @@ def handle_conn(conn, address, data):
                 if 'slaves' in data:
                     for slave in data['slaves']:
                         slave.send(parser.encode(req))
-                if data['role'] != 'slave':
 
+                if data['role'] != 'slave':
                     conn.send(resp)
             elif req[0] == "GET":
                 ans = None
@@ -90,7 +91,6 @@ def handle_conn(conn, address, data):
                         data.pop(req[1])
                 
                 resp = parser.encode(ans)
-                print("encoding: " + str(ans))
                 conn.send(resp)
             elif req[0] == "CONFIG":
                 ans = None
